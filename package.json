@@ -1,0 +1,88 @@
+{
+  "name": "clean-up",
+  "version": "1.0.0",
+  "description": "CleanUp - Windows Desktop Storage Analysis Utility",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "concurrently -k -p \"[{name}]\" -n \"VITE,ELECTRON\" -c \"cyan,magenta\" \"vite\" \"wait-on tcp:5188 && cross-env NODE_ENV=development electron .\"",
+    "build:renderer": "vite build",
+    "build:main": "tsc -p tsconfig.node.json",
+    "build": "npm run build:renderer && npm run build:main",
+    "check-types": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "test": "node --test tests/*.test.js",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder --win nsis portable",
+    "dist:installer": "npm run build && electron-builder --win nsis",
+    "dist:portable": "npm run build && electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.cleanup.app",
+    "productName": "CleanUp",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CleanUp",
+      "artifactName": "CleanUp-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "CleanUp-Portable-${version}.${ext}"
+    }
+  },
+  "keywords": [
+    "storage",
+    "cleanup",
+    "windows",
+    "utility"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^35.0.0",
+    "electron-builder": "^26.15.3",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "wait-on": "^8.0.2"
+  }
+}
